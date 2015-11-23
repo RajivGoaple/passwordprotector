@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">PasswordProtector</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_chanePassword">Change Password</string>
+    <string name="action_downloadFile">Export to File</string>
+    <string name="action_uploadFile">Import from File</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_password_list">Category List</string>
+    <string name="title_activity_dialog_add_password">dialog_add_password</string>
+    <string name="title_activity_password_list_of_catgory">Password List</string>
+    <string name="title_activity_file_browser">Browse backup file</string>
+    <string name="action_Help">Help</string>
+</resources>
