@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.ContextMenu;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +36,8 @@ import java.util.ArrayList;
 
 import Adapters.CategoryAdapter;
 import Adapters.PasswordAdapter;
+import Constants.Constant;
+import Helper.SecurityHelper;
 import Viewmodels.CategoryViewModel;
 import Viewmodels.PasswordViewModel;
 
@@ -308,18 +311,34 @@ public class PasswordListActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 //create text file of password  format "Category|Description|Password|Username" and save it into external storage
                                 File backupFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/PasswordProtectorBackup.txt");
+                                String seedValue = Constant.EncryptionSeed;;
                                 try {
                                     FileWriter out = new FileWriter(backupFile);
                                     BufferedWriter writer=new BufferedWriter(out);
                                     Cursor c=db.rawQuery("select cat.name,[pass].[description],[pass].[password],[pass].[username] from Category as cat,Passwords as pass where cat._id=pass.categoryId", null);
                                     while(c.moveToNext()) {
-                                        String category=c.getString(0);
-                                        String description=c.getString(1);
-                                        String password=c.getString(2);
-                                        String username=c.getString(3);
-                                        String text=category+"|"+description+"|"+password+"|"+username;
-                                        writer.write(text);
-                                        writer.newLine();
+
+                                        try {
+                                            String category=c.getString(0);
+                                            String encryptedCategory=SecurityHelper.encrypt(seedValue, category);
+
+                                            String description=c.getString(1);
+                                            String encryptedDescoption=SecurityHelper.encrypt(seedValue, description);
+
+                                            String password=c.getString(2);
+                                            String encryptedPassword=SecurityHelper.encrypt(seedValue, password);
+
+                                            String username=c.getString(3);
+                                            String encryptedUsername=SecurityHelper.encrypt(seedValue, username);
+
+                                            String text=encryptedCategory+"|"+encryptedDescoption+"|"+encryptedPassword+"|"+encryptedUsername;
+                                            writer.write(text);
+                                            writer.newLine();
+
+                                        } catch (Exception e) {
+                                            Toast.makeText(PasswordListActivity.this, "Something went wrong - Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
+                                        }
+
                                     }
                                     Toast toast = Toast.makeText(PasswordListActivity.this, "Done!", Toast.LENGTH_LONG);
                                     toast.show();
@@ -462,6 +481,34 @@ public class PasswordListActivity extends AppCompatActivity {
                 alert.dismiss();
             }
         });
+    }
+
+
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch(keyCode){
+            case KeyEvent.KEYCODE_BACK:
+                new AlertDialog.Builder(this)
+                        .setTitle("Confirm")
+                        .setMessage("Do you want to Exit?")
+                        .setIcon(R.drawable.password_icon)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                 finishApplication();
+                            }
+                        })
+                        .setNegativeButton("No", null).show();
+                return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    public void finishApplication()
+    {
+        this.finish();
     }
 }
 

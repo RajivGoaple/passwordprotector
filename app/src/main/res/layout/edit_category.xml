@@ -6,8 +6,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp" android:src="@drawable/password_icon" />
+            android:layout_width="40dp"
+            android:layout_height="40dp" android:layout_marginTop="15dp"  android:src="@drawable/password_icon" />
         <TextView
             android:layout_width="wrap_content" android:textSize="20dp" android:layout_marginTop="20dp"
             android:layout_height="wrap_content" android:text="Edit category" />

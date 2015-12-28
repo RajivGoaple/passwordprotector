@@ -34,7 +34,7 @@ tools:context=".MainActivity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 android:textColor="#6694b8"
-            android:text="Password protector" />
+            android:text="Password Manager" />
     </LinearLayout>
 
     <EditText

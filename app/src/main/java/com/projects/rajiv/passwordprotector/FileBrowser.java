@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -24,6 +25,9 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import Constants.Constant;
+import Helper.SecurityHelper;
 
 public class FileBrowser extends AppCompatActivity {
     private static final int FILE_SELECT_CODE = 0;
@@ -78,6 +82,7 @@ public class FileBrowser extends AppCompatActivity {
                         FileReader fileReader=new FileReader(input);
                         BufferedReader reader=new BufferedReader(fileReader);
                         String line=null;
+                        String seedValue =Constant.EncryptionSeed;
                         String lastModified=new Date().toString();
                         while ((line=reader.readLine())!=null) {
                           String[] arr =split(line,'|');// line.split("|");
@@ -90,6 +95,13 @@ public class FileBrowser extends AppCompatActivity {
                                 {
                                     Username=arr[3];
                                 }
+                               
+                               Cat= SecurityHelper.decrypt(seedValue,Cat);
+                                    Description=SecurityHelper.decrypt(seedValue,Description);
+                                    Password=SecurityHelper.decrypt(seedValue,Password);
+                                    Username=SecurityHelper.decrypt(seedValue,Username);
+
+
                               if(PreiousCategories.contains(Cat))
                               {
                                   //add password in previous category
