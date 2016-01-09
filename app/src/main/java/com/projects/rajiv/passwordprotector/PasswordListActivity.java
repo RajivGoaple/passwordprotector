@@ -1,6 +1,7 @@
 package com.projects.rajiv.passwordprotector;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -33,9 +35,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.List;
 
 import Adapters.CategoryAdapter;
 import Adapters.PasswordAdapter;
+import Adapters.SearchedPasswordAdapter;
 import Constants.Constant;
 import Helper.SecurityHelper;
 import Viewmodels.CategoryViewModel;
@@ -54,6 +58,7 @@ public class PasswordListActivity extends AppCompatActivity {
     CategoryViewModel searchedSelectedItem;
 
     SQLiteDatabase db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
           db=openOrCreateDatabase("PasswordProtectorDatabase", Context.MODE_PRIVATE, null);
@@ -76,7 +81,10 @@ public class PasswordListActivity extends AppCompatActivity {
                                                       if (!searchedText.isEmpty()) {
                                                          ArrayList<PasswordViewModel> searchedPasswordList = new ArrayList<PasswordViewModel>();
 
-                                                          Cursor c=db.rawQuery("SELECT _id,description,password,categoryId,username FROM Passwords where description like '%"+searchedText+"%' or username like '%"+searchedText+"%'", null);
+                                                          //Cursor c=db.rawQuery("SELECT _id,description,password,categoryId,username FROM Passwords where description like '%"+searchedText+"%' or username like '%"+searchedText+"%'", null);
+                                                          String query="SELECT P._id,P.description,P.password,P.categoryId,P.username,C.name FROM Passwords as P,Category as C where P.categoryId == C._id and (P.description like '%"+searchedText+"%' or P.username like '%"+searchedText+"%' or C.name like '%"+searchedText+"%')";
+                                                           Cursor c=db.rawQuery(query, null);
+
                                                           while(c.moveToNext())
                                                           {
                                                               String id=c.getString(0);
@@ -84,11 +92,11 @@ public class PasswordListActivity extends AppCompatActivity {
                                                               String password=c.getString(2);
                                                               String categoryId=c.getString(3);
                                                               String uname=c.getString(4);
-
-                                                              searchedPasswordList.add(new PasswordViewModel(id,description,password,categoryId,"",uname));
+                                                              String cateogryName=c.getString(5);
+                                                              searchedPasswordList.add(new PasswordViewModel(id,description,password,categoryId,"",uname,cateogryName));
                                                           }
 
-                                                          PasswordAdapter searchedAdapter =  new PasswordAdapter(PasswordListActivity.this,R.layout.passwordlist, searchedPasswordList);
+                                                          SearchedPasswordAdapter searchedAdapter =  new SearchedPasswordAdapter(PasswordListActivity.this,R.layout.searched_password_list, searchedPasswordList);
                                                           searchedAdapter.notifyDataSetChanged();
                                                           Searchclistview.setAdapter(searchedAdapter);
 
@@ -510,6 +518,18 @@ public class PasswordListActivity extends AppCompatActivity {
     {
         this.finish();
     }
+
+    /*@Override
+    public void onPause() {
+        //Toast.makeText(this,"Paused",Toast.LENGTH_LONG);
+        Log.d("on pause","on pause");
+        super.onPause();
+        if(!isRunningInForeground()) {
+            finishApplication();
+        }
+    }
+*/
+ 
 }
 
 

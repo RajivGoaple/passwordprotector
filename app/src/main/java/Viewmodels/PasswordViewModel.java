@@ -10,7 +10,8 @@ public class PasswordViewModel {
     public String LastModified;
     public String CategoryId;
     public String Username;
-    public PasswordViewModel(String id,String description,String password,String categoryId,String lastModified,String username)
+    public String CategoryName;
+    public PasswordViewModel(String id,String description,String password,String categoryId,String lastModified,String username,String categoryName)
     {
         this.Id=id;
         this.Description=description;
@@ -18,5 +19,6 @@ public class PasswordViewModel {
         this.CategoryId=categoryId;
         this.LastModified=lastModified;
         this.Username=username;
+        this.CategoryName=categoryName;
     }
 }

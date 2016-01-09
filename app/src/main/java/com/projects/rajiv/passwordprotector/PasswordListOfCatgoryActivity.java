@@ -78,7 +78,7 @@ public class PasswordListOfCatgoryActivity extends AppCompatActivity {
             String lastModified = formatter.format(Date.parse(c.getString(4)));
             String username=c.getString(5);
 
-           list.add(new PasswordViewModel(id,description,password,categoryId,lastModified,username));
+           list.add(new PasswordViewModel(id,description,password,categoryId,lastModified,username,""));
 
         }
 
@@ -246,7 +246,7 @@ adapter.notifyDataSetChanged();
                             String lastModified = formatter.format(Date.parse(c.getString(4)));
                             String usernm=c.getString(5);
 
-                            list.add(new PasswordViewModel(id2,description,password,categoryId,lastModified,usernm));
+                            list.add(new PasswordViewModel(id2,description,password,categoryId,lastModified,usernm,""));
                         }
 
                         adapter.notifyDataSetChanged();

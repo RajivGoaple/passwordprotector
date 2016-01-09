@@ -95,7 +95,7 @@ public class FileBrowser extends AppCompatActivity {
                                 {
                                     Username=arr[3];
                                 }
-                               
+
                                Cat= SecurityHelper.decrypt(seedValue,Cat);
                                     Description=SecurityHelper.decrypt(seedValue,Description);
                                     Password=SecurityHelper.decrypt(seedValue,Password);
